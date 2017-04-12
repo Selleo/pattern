@@ -1,0 +1,1 @@
+require "patterns/query"
