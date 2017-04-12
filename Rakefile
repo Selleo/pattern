@@ -14,12 +14,12 @@ require 'rake'
 require 'juwelier'
 Juwelier::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
-  gem.name = "pattern"
-  gem.homepage = "http://github.com/stevo/pattern"
+  gem.name = "rails-patterns"
+  gem.homepage = "http://github.com/selleo/pattern"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "blazejek@gmail.com"
+  gem.summary = "A collection of lightweight, standardized, rails-oriented patterns."
+  gem.description = "A collection of lightweight, standardized, rails-oriented patterns."
+  gem.email = "b.kosmowski@selleo.com"
   gem.authors = ["Stevo"]
 
   # dependencies defined in Gemfile
