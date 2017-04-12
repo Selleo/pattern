@@ -2,6 +2,18 @@
 
 A collection of lightweight, standardized, rails-oriented patterns.
 
+## Installation
+
+```ruby
+# Gemfile
+
+#...
+gem "rails-patterns"
+#...
+```
+
+Then `bundle install`
+
 ## Query
  
 ### When to use it

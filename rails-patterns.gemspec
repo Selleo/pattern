@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/pattern.rb",
     "lib/patterns/query.rb",
     "pattern.gemspec",
+    "rails-patterns.gemspec",
     "spec/patterns/query_spec.rb",
     "spec/spec_helper.rb"
   ]
