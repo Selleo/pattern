@@ -71,3 +71,52 @@ class User < ApplicationRecord
   scope :recenty_activated, RecentlyActivatedUsersQuery
 end
 ```
+
+## Service
+
+### When to use it
+
+Service objects are commonly used to mitigate problems with model callbacks that interact with external classes ([read more...](http://samuelmullen.com/2013/05/the-problem-with-rails-callbacks/)).
+Service objects are also useful for handling processes involving multiple steps. E.g. a controller that performs more than one operation on its subject (usually a model instance) is a possible candidate for Extract ServiceObject (or Extract FormObject) refactoring.
+
+### Assumptions and rules
+
+* Service objects are always used by calling class-level `.call` method
+* Service objects have to implement `#call` method
+* Calling service object's `.call` method executes `#call` and returns service object instance
+* A result of `#call` method is accessible through `#result` method
+* It is recommended for `#call` method to be the only public method of service object (besides state readers)
+* It is recommended to name service object classes after commands (e.g. `ActivateUser` instead of `UserActivation`)
+
+### Examples
+
+#### Declaration
+
+```ruby
+class ActivateUser < Patterns::Service
+  def initialize(user)
+    @user = user
+  end
+
+  def call
+    user.activate!
+    NotificationsMailer.user_activation_notification(user).deliver_now
+    user
+  end
+
+  private
+
+  attr_reader :user
+end
+```
+
+#### Usage
+
+```ruby
+  user_activation = ActivateUser.call(user)
+  user_activation.result # <User id: 5803143, email: "tony@patterns.dev ...
+```
+
+## Further reading
+
+* [7 ways to decompose fat active record models](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/)
