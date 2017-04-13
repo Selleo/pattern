@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Stevo".freeze]
-  s.date = "2017-04-12"
+  s.date = "2017-04-13"
   s.description = "A collection of lightweight, standardized, rails-oriented patterns.".freeze
   s.email = "b.kosmowski@selleo.com".freeze
   s.extra_rdoc_files = [
@@ -27,9 +27,9 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
-    "lib/pattern.rb",
+    "lib/patterns.rb",
     "lib/patterns/query.rb",
-    "pattern.gemspec",
+    "lib/rails-patterns.rb",
     "rails-patterns.gemspec",
     "spec/patterns/query_spec.rb",
     "spec/spec_helper.rb"
@@ -44,20 +44,17 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activerecord>.freeze, [">= 4.2.6"])
-      s.add_runtime_dependency(%q<activesupport>.freeze, [">= 4.2.8"])
       s.add_development_dependency(%q<rspec>.freeze, [">= 0"])
       s.add_development_dependency(%q<bundler>.freeze, ["~> 1.0"])
       s.add_development_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
     else
       s.add_dependency(%q<activerecord>.freeze, [">= 4.2.6"])
-      s.add_dependency(%q<activesupport>.freeze, [">= 4.2.8"])
       s.add_dependency(%q<rspec>.freeze, [">= 0"])
       s.add_dependency(%q<bundler>.freeze, ["~> 1.0"])
       s.add_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
     end
   else
     s.add_dependency(%q<activerecord>.freeze, [">= 4.2.6"])
-    s.add_dependency(%q<activesupport>.freeze, [">= 4.2.8"])
     s.add_dependency(%q<rspec>.freeze, [">= 0"])
     s.add_dependency(%q<bundler>.freeze, ["~> 1.0"])
     s.add_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])

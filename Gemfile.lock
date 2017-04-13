@@ -83,7 +83,6 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (>= 4.2.6)
-  activesupport (>= 4.2.8)
   bundler (~> 1.0)
   juwelier (~> 2.1.0)
   rspec
