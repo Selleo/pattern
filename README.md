@@ -2,6 +2,10 @@
 
 A collection of lightweight, standardized, rails-oriented patterns.
 
+##### [Query - complex querying on active record relation](#query)
+##### [Service - useful for handling processes involving multiple steps](#service)
+##### [Collection - when in need to add a method that relates to the collection a whole](#collection)
+
 ## Installation
 
 ```ruby
