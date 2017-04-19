@@ -166,8 +166,8 @@ end
 
 ```ruby
 ColorsCollection.new
-CustomerEventsCollection.for(customer)
-CustomerEventsCollection.for(customer, label_method: "name")
+CustomerEventsByTypeCollection.for(customer)
+CustomerEventsByTypeCollection.for(customer, label_method: "name")
 ```
 
 ## Further reading
