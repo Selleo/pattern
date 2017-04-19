@@ -117,6 +117,59 @@ end
   user_activation.result # <User id: 5803143, email: "tony@patterns.dev ...
 ```
 
+## Collection
+
+### When to use it
+
+One should consider using collection pattern when in need to add a method that relates to the collection a whole.
+Popular example for such situation is for paginated collections, where for instance `#current_page` getter makes sense only in collection context.
+Also collections can be used as a container for mapping or grouping logic (especially if the mapping is not 1-1 in terms of size).
+Collection might also act as a replacement for models not inheriting from ActiveRecord::Base (e.g. `StatusesCollection`, `ColorsCollection` etc.).
+What is more, collections can be used if we need to encapsulate "flagging" logic - for instance if we need to render a separator element between collection elements based on some specific logic, we can move this logic from view layer to collection and yield an additional flag to control rendering in view.
+
+### Assumptions and rules
+
+* Collections include `Enumerable`
+* Collections can be initialized using `.new`, `.from` and `.for` (aliases)
+* Collections have to implement `#collection` method that returns object responding to `#each`
+* Collections provide access to consecutive keyword arguments using `#options` hash
+* Collections provide access to first argument using `#subject`
+
+### Examples
+
+#### Declaration
+
+```ruby
+class ColorsCollection < Patterns::Collection
+  AVAILABLE_COLORS = { red: "#FF0000", green: "#00FF00", blue: "#0000FF" }
+
+  private
+
+  def collection
+    AVAILABLE_COLORS
+  end
+end
+
+class CustomerEventsByTypeCollection < Patterns::Collection
+  private
+
+  def collection
+    subject.
+    events.
+    group_by(&:type).
+    transform_values{ |event| event.public_send(options.fetch(:label_method, "description")) }
+  end
+end
+```
+
+#### Usage
+
+```ruby
+ColorsCollection.new
+CustomerEventsCollection.for(customer)
+CustomerEventsCollection.for(customer, label_method: "name")
+```
+
 ## Further reading
 
 * [7 ways to decompose fat active record models](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/)
