@@ -251,15 +251,87 @@ RSpec.describe Patterns::Form do
   end
 
   describe "#model_name" do
-    it "returns object responding to #param_key returning resource#param_key" do
-      CustomForm = Class.new(Patterns::Form)
-      resource = double(model_name: double(param_key: "resource_key"))
+    describe "#param_key" do
+      context "resource exists" do
+        context "resource responds to #model_name" do
+          context "param_key is not defined" do
+            it "returns object responding to #param_key returning resource#param_key" do
+              CustomForm = Class.new(Patterns::Form)
+              resource = double(model_name: double(param_key: "resource_key"))
 
-      form = CustomForm.new(resource)
-      result = form.model_name
+              form = CustomForm.new(resource)
+              result = form.model_name
 
-      expect(result).to respond_to(:param_key)
-      expect(result.param_key).to eq "resource_key"
+              expect(result).to respond_to(:param_key)
+              expect(result.param_key).to eq "resource_key"
+            end
+          end
+
+          context "param_key is defined" do
+            it "returns param_key" do
+              CustomForm = Class.new(Patterns::Form) do
+                param_key "test_key"
+              end
+              resource = double(model_name: double(param_key: "resource_key"))
+
+              form = CustomForm.new(resource)
+              result = form.model_name
+
+              expect(result.param_key).to eq "test_key"
+            end
+          end
+        end
+
+        context "resource does not respond to #model_name" do
+          context "param_key is not defined" do
+            it "raises NoParamKey" do
+              CustomForm = Class.new(Patterns::Form)
+
+              form = CustomForm.new(double)
+
+              expect { form.model_name }.to raise_error(Patterns::Form::NoParamKey)
+            end
+          end
+
+          context "param_key is defined" do
+            it "returns param_key" do
+              CustomForm = Class.new(Patterns::Form) do
+                param_key "test_key"
+              end
+
+              form = CustomForm.new(double)
+              result = form.model_name
+
+              expect(result.param_key).to eq "test_key"
+            end
+          end
+        end
+      end
+
+      context "resource does not exist" do
+        context "param_key is not defined" do
+          it "raises NoParamKey" do
+            CustomForm = Class.new(Patterns::Form)
+
+            form = CustomForm.new
+
+            expect { form.model_name }.to raise_error(Patterns::Form::NoParamKey)
+          end
+        end
+
+        context "param_key is defined" do
+          it "returns param_key" do
+            CustomForm = Class.new(Patterns::Form) do
+              param_key "test_key"
+            end
+
+            form = CustomForm.new
+            result = form.model_name
+
+            expect(result.param_key).to eq "test_key"
+          end
+        end
+      end
     end
   end
 end

@@ -7,6 +7,7 @@ module Patterns
 
     Error = Class.new(StandardError)
     Invalid = Class.new(Error)
+    NoParamKey = Class.new(Error)
 
     def initialize(*args)
       attributes = args.extract_options!
@@ -57,12 +58,27 @@ module Patterns
     def model_name
       @model_name ||= Struct.
         new(:param_key).
-        new(resource.model_name.param_key)
+        new(param_key)
+    end
+
+    def self.param_key(key = nil)
+      if key.nil?
+        @param_key
+      else
+        @param_key = key
+      end
     end
 
     private
 
     attr_reader :resource
+
+    def param_key
+      param_key = self.class.param_key
+      param_key ||= resource&.respond_to?(:model_name) && resource.model_name.param_key
+      raise NoParamKey if param_key.blank?
+      param_key
+    end
 
     def persist
       raise NotImplementedError, "#persist has to be implemented"
