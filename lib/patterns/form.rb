@@ -42,7 +42,11 @@ module Patterns
     end
 
     def persisted?
-      false
+      if resource && resource.respond_to?(:persisted?)
+        resource.persisted?
+      else
+        false
+      end
     end
 
     def model_name

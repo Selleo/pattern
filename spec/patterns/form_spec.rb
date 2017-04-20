@@ -154,12 +154,38 @@ RSpec.describe Patterns::Form do
   end
 
   describe "#persisted?" do
-    it "returns false" do
-      CustomForm = Class.new(Patterns::Form)
+    context "when resource is nil" do
+      it "returns false" do
+        CustomForm = Class.new(Patterns::Form)
 
-      form = CustomForm.new(double)
+        form = CustomForm.new
 
-      expect(form.persisted?).to eq false
+        expect(form.persisted?).to eq false
+      end
+    end
+
+    context "when resource is not nil" do
+      context "when resource responds to #persisted?" do
+        it "returns resource#persisted?" do
+          CustomForm = Class.new(Patterns::Form)
+
+          form_1 = CustomForm.new(double(persisted?: true))
+          form_2 = CustomForm.new(double(persisted?: false))
+
+          expect(form_1.persisted?).to eq true
+          expect(form_2.persisted?).to eq false
+        end
+      end
+
+      context "when resource does not respond to #persisted?" do
+        it "returns false" do
+          CustomForm = Class.new(Patterns::Form)
+
+          form = CustomForm.new(double)
+
+          expect(form.persisted?).to eq false
+        end
+      end
     end
   end
 
