@@ -33,6 +33,14 @@ RSpec.describe Patterns::Form do
       expect(form.first_name).to eq "Tony"
       expect(form.last_name).to eq "Stark"
     end
+
+    it "can be initialized without providing resource" do
+      CustomForm = Class.new(Patterns::Form)
+
+      form = CustomForm.new
+
+      expect(form).to be_a_kind_of(CustomForm)
+    end
   end
 
   describe "#save" do

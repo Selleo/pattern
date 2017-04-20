@@ -8,8 +8,9 @@ module Patterns
     Error = Class.new(StandardError)
     Invalid = Class.new(Error)
 
-    def initialize(resource, attributes = {})
-      @resource = resource
+    def initialize(*args)
+      attributes = args.extract_options!
+      @resource = args.first
       super(attributes)
     end
 
