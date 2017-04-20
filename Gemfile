@@ -1,7 +1,7 @@
 source "https://rubygems.org"
-# Add dependencies required to use your gem here.
-# Example:
-  gem "activerecord", ">= 4.2.6"
+
+gem "activerecord", ">= 4.2.6"
+gem "virtus"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
