@@ -28,7 +28,7 @@ RSpec.describe Patterns::Form do
         attribute :last_name, String
       end
 
-      form = CustomForm.new(double, { first_name: "Tony", last_name: "Stark" })
+      form = CustomForm.new({ first_name: "Tony", last_name: "Stark" })
 
       expect(form.first_name).to eq "Tony"
       expect(form.last_name).to eq "Stark"
@@ -40,6 +40,37 @@ RSpec.describe Patterns::Form do
       form = CustomForm.new
 
       expect(form).to be_a_kind_of(CustomForm)
+    end
+
+    context "when resource exists" do
+      context "when resource responds to #attributes" do
+        it "assigns merged attributes from resource and passed as argument" do
+          CustomForm = Class.new(Patterns::Form) do
+            attribute :first_name, String
+            attribute :last_name, String
+          end
+          resource = double(attributes: { first_name: "Jack", last_name: "Black" })
+
+          form = CustomForm.new(resource, { first_name: "Tony" })
+
+          expect(form.first_name).to eq "Tony"
+          expect(form.last_name).to eq "Black"
+        end
+      end
+
+      context "when resource does not respond to #attributes" do
+        it "assigns attributes passed as argument only" do
+          CustomForm = Class.new(Patterns::Form) do
+            attribute :first_name, String
+            attribute :last_name, String
+          end
+
+          form = CustomForm.new(double, { first_name: "Tony" })
+
+          expect(form.first_name).to eq "Tony"
+          expect(form.last_name).to eq nil
+        end
+      end
     end
   end
 

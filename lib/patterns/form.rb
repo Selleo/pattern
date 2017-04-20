@@ -11,6 +11,11 @@ module Patterns
     def initialize(*args)
       attributes = args.extract_options!
       @resource = args.first
+
+      if resource&.respond_to?(:attributes)
+        attributes = resource.attributes.merge(attributes)
+      end
+
       super(attributes)
     end
 
@@ -42,7 +47,7 @@ module Patterns
     end
 
     def persisted?
-      if resource && resource.respond_to?(:persisted?)
+      if resource&.respond_to?(:persisted?)
         resource.persisted?
       else
         false
