@@ -34,6 +34,42 @@ RSpec.describe Patterns::Form do
       expect(form.last_name).to eq "Stark"
     end
 
+    context "if second parameter is ActionController::Parameters object" do
+      it "treats ActionController::Parameters as regular hash" do
+        CustomForm = Class.new(Patterns::Form) do
+          attribute :first_name, String
+          attribute :last_name, String
+        end
+
+        strong_parameters = ActionController::Parameters.new(
+          { "first_name" => "Kobe", "last_name" => "Bryant" }
+        )
+
+        form = CustomForm.new(double, strong_parameters)
+
+        expect(form.first_name).to eq "Kobe"
+        expect(form.last_name).to eq "Bryant"
+      end
+    end
+
+    context "if only parameter is ActionController::Parameters object" do
+      it "treats ActionController::Parameters as regular hash" do
+        CustomForm = Class.new(Patterns::Form) do
+          attribute :first_name, String
+          attribute :last_name, String
+        end
+
+        strong_parameters = ActionController::Parameters.new(
+          { "first_name" => "Saul", "last_name" => "Goodman" }
+        )
+
+        form = CustomForm.new(strong_parameters)
+
+        expect(form.first_name).to eq "Saul"
+        expect(form.last_name).to eq "Goodman"
+      end
+    end
+
     it "can be initialized without providing resource" do
       CustomForm = Class.new(Patterns::Form)
 
@@ -59,7 +95,7 @@ RSpec.describe Patterns::Form do
       end
 
       context "when resource does not respond to #attributes" do
-        it "assigns attributes passed as argument only" do
+        it "assigns attributes passed as arguments" do
           CustomForm = Class.new(Patterns::Form) do
             attribute :first_name, String
             attribute :last_name, String

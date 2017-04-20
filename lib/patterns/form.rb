@@ -1,4 +1,5 @@
 require "virtus"
+require "action_controller/metal/strong_parameters"
 
 module Patterns
   class Form
@@ -11,6 +12,11 @@ module Patterns
 
     def initialize(*args)
       attributes = args.extract_options!
+
+      if attributes.blank? && args.last.is_a?(ActionController::Parameters)
+        attributes = args.pop.to_unsafe_h
+      end
+
       @resource = args.first
 
       if resource&.respond_to?(:attributes)
@@ -71,7 +77,7 @@ module Patterns
 
     private
 
-    attr_reader :resource
+    attr_reader :resource, :form_owner
 
     def param_key
       param_key = self.class.param_key

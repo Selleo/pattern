@@ -2,9 +2,10 @@
 
 A collection of lightweight, standardized, rails-oriented patterns.
 
-##### [Query - complex querying on active record relation](#query)
-##### [Service - useful for handling processes involving multiple steps](#service)
-##### [Collection - when in need to add a method that relates to the collection a whole](#collection)
+- [Query - complex querying on active record relation](#query)
+- [Service - useful for handling processes involving multiple steps](#service)
+- [Collection - when in need to add a method that relates to the collection a whole](#collection)
+- [Form - when you need a place for callbacks, want to replace strong parameters or handle virtual/composite resources](#form)
 
 ## Installation
 
@@ -172,6 +173,83 @@ end
 ColorsCollection.new
 CustomerEventsByTypeCollection.for(customer)
 CustomerEventsByTypeCollection.for(customer, label_method: "name")
+```
+
+## Form
+
+### When to use it
+
+Form objects, just like service objects, are commonly used to mitigate problems with model callbacks that interact with external classes ([read more...](http://samuelmullen.com/2013/05/the-problem-with-rails-callbacks/)).
+Form objects can also be used as replacement for `ActionController::StrongParameters` strategy, as all writable attributes are re-defined within each form.
+Finally form objects can be used as wrappers for virtual (with no model representation) or composite (saving multiple models at once) resources.
+In the latter case this may act as replacement for `ActiveRecord::NestedAttributes`.
+
+### Assumptions and rules
+
+* Forms include `ActiveModel::Validations` to support validation.
+* Forms include `Virtus.model` to support `attribute` static method with all [corresponding capabilities](https://github.com/solnic/virtus).
+* Forms can be initialized using `.new`.
+* Forms accept optional resource object as first constructor argument.
+* Forms accept optional attributes hash as latter constructor argument.
+* forms have to implement `#persist` method that returns falsey (if failed) or truthy (if succeeded) value.
+* Forms provide access to first constructor argument using `#resource`.
+* Forms are saved using their `#save` or `#save!` methods.
+* Form's attributes are populated with passed-in attributes hash reverse-merged with `resource#attributes` result if possible.
+* Forms provide `#as` builder method that populates internal `@form_owner` variable (can be used to store current user).
+* Forms allow defining/overriding their `#param_key` method result by using `.param_key` static method. This defaults to `#resource#model_name#param_key`.
+* Forms delegate `#persisted?` method to `#resource` if possible.
+* It is recommended to wrap `#persist` method in transaction if possible and if multiple model are affected.
+
+
+### Examples
+
+#### Declaration
+
+```ruby
+class UserForm < Patterns::Form
+  param_key "person"
+
+  attribute :first_name, String
+  attribute :last_name, String
+  attribute :age, Integer
+  attribute :full_address, String
+  attribute :skip_notification, Boolean
+
+  validate :first_name, :last_name, presence: true
+
+  private
+
+  def persist
+    update_user and
+      update_address and
+      deliver_notification
+  end
+
+  def update_user
+    resource.update_attributes(attributes.except(:full_address, :skip_notification))
+  end
+
+  def update_address
+    resource.address.update_attributes(full_address: full_address)
+  end
+
+  def deliver_notification
+    skip_notification || UserNotifier.user_update_notification(user, form_owner).deliver
+  end
+end
+```
+
+#### Usage
+
+```ruby
+form = UserForm.new(User.find(1), params[:person])
+form.save
+
+form = UserForm.new(User.new, params[:person]).as(current_user)
+form.save!
+
+ReportConfigurationForm.new
+ReportConfigurationForm.new({ include_extra_data: true, dump_as_csv: true })
 ```
 
 ## Further reading

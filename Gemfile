@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 gem "activerecord", ">= 4.2.6"
+gem "actionpack", ">= 4.2.6"
 gem "virtus"
 
 # Add dependencies to develop your gem here.
