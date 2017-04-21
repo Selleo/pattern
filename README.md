@@ -4,7 +4,7 @@ A collection of lightweight, standardized, rails-oriented patterns.
 
 - [Query - complex querying on active record relation](#query)
 - [Service - useful for handling processes involving multiple steps](#service)
-- [Collection - when in need to add a method that relates to the collection a whole](#collection)
+- [Collection - when in need to add a method that relates to the collection as whole](#collection)
 - [Form - when you need a place for callbacks, want to replace strong parameters or handle virtual/composite resources](#form)
 
 ## Installation
@@ -191,7 +191,7 @@ In the latter case this may act as replacement for `ActiveRecord::NestedAttribut
 * Forms can be initialized using `.new`.
 * Forms accept optional resource object as first constructor argument.
 * Forms accept optional attributes hash as latter constructor argument.
-* forms have to implement `#persist` method that returns falsey (if failed) or truthy (if succeeded) value.
+* Forms have to implement `#persist` method that returns falsey (if failed) or truthy (if succeeded) value.
 * Forms provide access to first constructor argument using `#resource`.
 * Forms are saved using their `#save` or `#save!` methods.
 * Forms will attempt to pre-populate their fields using `resource#attributes` and public getters for `resource`
