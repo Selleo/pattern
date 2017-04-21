@@ -34,6 +34,31 @@ RSpec.describe Patterns::Form do
       expect(form.last_name).to eq "Stark"
     end
 
+    it "handles both symbols and strings as attribute keys" do
+      CustomForm = Class.new(Patterns::Form) do
+        attribute :first_name, String
+        attribute :last_name, String
+        attribute :email, String
+        attribute :age, Integer
+      end
+      resource = double(
+        attributes: {
+          "first_name" => "Bat",
+          last_name: "Man",
+          "email" => "bat@man.dev"
+        }
+      )
+
+      form = CustomForm.new(
+        resource, { first_name: "Christian", "last_name" => "Bale", "age" => 40 }
+      )
+
+      expect(form.first_name).to eq "Christian"
+      expect(form.last_name).to eq "Bale"
+      expect(form.email).to eq "bat@man.dev"
+      expect(form.age).to eq 40
+    end
+
     context "if second parameter is ActionController::Parameters object" do
       it "treats ActionController::Parameters as regular hash" do
         CustomForm = Class.new(Patterns::Form) do
@@ -92,6 +117,23 @@ RSpec.describe Patterns::Form do
           expect(form.first_name).to eq "Tony"
           expect(form.last_name).to eq "Black"
         end
+
+        it "attempts to use public getters to populate missing attributes" do
+          CustomForm = Class.new(Patterns::Form) do
+            attribute :first_name, String
+            attribute :last_name, String
+            attribute :age, Integer
+            attribute :email, String
+          end
+          resource = double(attributes: { first_name: "Jack", last_name: "Black" }, age: 27)
+
+          form = CustomForm.new(resource, { first_name: "Tony" })
+
+          expect(form.first_name).to eq "Tony"
+          expect(form.last_name).to eq "Black"
+          expect(form.age).to eq 27
+          expect(form.email).to eq nil
+        end
       end
 
       context "when resource does not respond to #attributes" do
@@ -105,6 +147,23 @@ RSpec.describe Patterns::Form do
 
           expect(form.first_name).to eq "Tony"
           expect(form.last_name).to eq nil
+        end
+
+        it "attempts to use public getters to populate missing attributes" do
+          CustomForm = Class.new(Patterns::Form) do
+            attribute :first_name, String
+            attribute :last_name, String
+            attribute :age, Integer
+            attribute :email, String
+          end
+          resource = double(last_name: "Black", age: 27)
+
+          form = CustomForm.new(resource, { first_name: "Tony" })
+
+          expect(form.first_name).to eq "Tony"
+          expect(form.last_name).to eq "Black"
+          expect(form.age).to eq 27
+          expect(form.email).to eq nil
         end
       end
     end

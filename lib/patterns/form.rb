@@ -19,11 +19,7 @@ module Patterns
 
       @resource = args.first
 
-      if resource&.respond_to?(:attributes)
-        attributes = resource.attributes.merge(attributes)
-      end
-
-      super(attributes)
+      super(build_original_attributes.merge(attributes))
     end
 
     def save
@@ -84,6 +80,17 @@ module Patterns
       param_key ||= resource&.respond_to?(:model_name) && resource.model_name.param_key
       raise NoParamKey if param_key.blank?
       param_key
+    end
+
+    def build_original_attributes
+      return {} if resource.nil?
+      base_attributes = resource.respond_to?(:attributes) && resource.attributes.symbolize_keys
+
+      self.class.attribute_set.each_with_object(base_attributes || {}) do |attribute, result|
+        if result[attribute.name].blank? && resource.respond_to?(attribute.name)
+          result[attribute.name] = resource.public_send(attribute.name)
+        end
+      end
     end
 
     def persist
