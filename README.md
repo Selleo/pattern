@@ -194,12 +194,13 @@ In the latter case this may act as replacement for `ActiveRecord::NestedAttribut
 * forms have to implement `#persist` method that returns falsey (if failed) or truthy (if succeeded) value.
 * Forms provide access to first constructor argument using `#resource`.
 * Forms are saved using their `#save` or `#save!` methods.
-* Form's attributes are populated with passed-in attributes hash reverse-merged with `resource#attributes` result if possible.
+* Forms will attempt to pre-populate their fields using `resource#attributes` and public getters for `resource`
+* Form's fields are populated with passed-in attributes hash reverse-merged with pre-populated attributes if possible.
 * Forms provide `#as` builder method that populates internal `@form_owner` variable (can be used to store current user).
 * Forms allow defining/overriding their `#param_key` method result by using `.param_key` static method. This defaults to `#resource#model_name#param_key`.
 * Forms delegate `#persisted?` method to `#resource` if possible.
+* Forms do handle `ActionController::Parameters` as attributes hash (using `to_unsafe_h`)
 * It is recommended to wrap `#persist` method in transaction if possible and if multiple model are affected.
-
 
 ### Examples
 
@@ -235,6 +236,22 @@ class UserForm < Patterns::Form
 
   def deliver_notification
     skip_notification || UserNotifier.user_update_notification(user, form_owner).deliver
+  end
+end
+
+class ReportConfigurationForm < Patterns::Form
+  param_key "report"
+
+  attribute :include_extra_data, Boolean
+  attribute :dump_as_csv, Boolean
+  attribute :comma_separated_column_names, String
+  attribute :date_start, Date
+  attribute :date_end, Date
+
+  private
+
+  def persist
+    SendReport.call(attributes)
   end
 end
 ```
