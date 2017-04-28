@@ -166,7 +166,7 @@ class CustomerEventsByTypeCollection < Patterns::Collection
     subject.
     events.
     group_by(&:type).
-    transform_values{ |event| event.public_send(options.fetch(:label_method, "description")) }
+    transform_values{ |events| events.map{ |e| e.public_send(options.fetch(:label_method, "description")) }}
   end
 end
 ```
