@@ -93,6 +93,10 @@ Service objects are also useful for handling processes involving multiple steps.
 * It is recommended for `#call` method to be the only public method of service object (besides state readers)
 * It is recommended to name service object classes after commands (e.g. `ActivateUser` instead of `UserActivation`)
 
+### Other 
+
+A bit higher level of abstraction is provided by [business_process gem](https://github.com/Selleo/business_process). 
+
 ### Examples
 
 #### Declaration
