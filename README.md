@@ -82,7 +82,7 @@ end
 ### When to use it
 
 Service objects are commonly used to mitigate problems with model callbacks that interact with external classes ([read more...](http://samuelmullen.com/2013/05/the-problem-with-rails-callbacks/)).
-Service objects are also useful for handling processes involving multiple steps. E.g. a controller that performs more than one operation on its subject (usually a model instance) is a possible candidate for Extract ServiceObject (or Extract FormObject) refactoring.
+Service objects are also useful for handling processes involving multiple steps. E.g. a controller that performs more than one operation on its subject (usually a model instance) is a possible candidate for Extract ServiceObject (or Extract FormObject) refactoring. In many cases service object can be used as scaffolding for [replace method with object refactoring](https://sourcemaking.com/refactoring/replace-method-with-method-object).
 
 ### Assumptions and rules
 
@@ -187,6 +187,7 @@ Form objects, just like service objects, are commonly used to mitigate problems 
 Form objects can also be used as replacement for `ActionController::StrongParameters` strategy, as all writable attributes are re-defined within each form.
 Finally form objects can be used as wrappers for virtual (with no model representation) or composite (saving multiple models at once) resources.
 In the latter case this may act as replacement for `ActiveRecord::NestedAttributes`.
+In some cases FormObject can be used as scaffolding for [replace method with object refactoring](https://sourcemaking.com/refactoring/replace-method-with-method-object).
 
 ### Assumptions and rules
 
