@@ -50,7 +50,7 @@ module Patterns
     end
 
     def persisted?
-      if resource&.respond_to?(:persisted?)
+      if resource.present? && resource.respond_to?(:persisted?)
         resource.persisted?
       else
         false
@@ -77,7 +77,7 @@ module Patterns
 
     def param_key
       param_key = self.class.param_key
-      param_key ||= resource&.respond_to?(:model_name) && resource.model_name.param_key
+      param_key ||= resource.present? && resource.respond_to?(:model_name) && resource.model_name.param_key
       raise NoParamKey if param_key.blank?
       param_key
     end
