@@ -6,6 +6,7 @@ A collection of lightweight, standardized, rails-oriented patterns.
 - [Service - useful for handling processes involving multiple steps](#service)
 - [Collection - when in need to add a method that relates to the collection as whole](#collection)
 - [Form - when you need a place for callbacks, want to replace strong parameters or handle virtual/composite resources](#form)
+- [Calculation - when you need a place for calculating a simple value (numeric, array, hash) and/or cache it](#calculation)
 
 ## Installation
 
@@ -272,6 +273,75 @@ form.save!
 
 ReportConfigurationForm.new
 ReportConfigurationForm.new({ include_extra_data: true, dump_as_csv: true })
+```
+
+## Calculation
+
+### When to use it
+
+Calculation objects provide a place to calculate simple values (i.e. numeric, arrays, hashes), especially when calculations require interacting with multiple classes, and thus do not fit into any particular one.
+Calculation objects also provide simple abstraction for caching their results.
+
+### Assumptions and rules
+
+* Calculations have to implement `#result` method that returns any value (result of calculation).
+* Calculations do provide `.set_cache_expiry_every` method, that allows defining caching period.
+* When `.set_cache_expiry_every` is not used, result is not being cached.
+* Calculations return result by calling any of following methods: `.calculate`, `.result_for` or `.result`.
+* First argument passed to calculation is accessible by `#subject` private method.
+* Arguments hash passed to calculation is accessible by `#options` private method.
+* Caching takes into account arguments passed when building cache key.
+* To build cache key, `#cache_key` of each argument value is used if possible.
+* By default `Rails.cache` is used as cache store.
+
+### Examples
+
+#### Declaration
+
+```ruby
+class AverageHotelDailyRevenue < Patterns::Calculation
+  set_cache_expiry_every 1.day
+
+  private
+
+  def result
+    reservations.sum(:price) / days_in_year
+  end
+
+  def reservations
+    Reservation.where(
+      date: (beginning_of_year..end_of_year),
+      hotel_id: subject.id
+    )
+  end
+
+  def days_in_year
+    end_of_year.yday
+  end
+
+  def year
+    options.fetch(:year, Date.current.year)
+  end
+
+  def beginning_of_year
+    Date.new(year).beginning_of_year
+  end
+
+  def end_of_year
+    Date.new(year).end_of_year
+  end
+end
+```
+
+#### Usage
+
+```ruby
+hotel = Hotel.find(123)
+AverageHotelDailyRevenue.result_for(hotel)
+AverageHotelDailyRevenue.result_for(hotel, year: 2015)
+
+TotalCurrentRevenue.calculate
+AverageDailyRevenue.result
 ```
 
 ## Further reading
