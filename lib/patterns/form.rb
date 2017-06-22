@@ -49,6 +49,14 @@ module Patterns
       self
     end
 
+    def to_param
+      if resource.present? && resource.respond_to?(:to_param)
+        resource.to_param
+      else
+        nil
+      end
+    end
+
     def persisted?
       if resource.present? && resource.respond_to?(:persisted?)
         resource.persisted?
@@ -58,9 +66,7 @@ module Patterns
     end
 
     def model_name
-      @model_name ||= Struct.
-        new(:param_key).
-        new(param_key)
+      @model_name ||= OpenStruct.new(model_name_attributes)
     end
 
     def self.param_key(key = nil)
@@ -75,13 +81,24 @@ module Patterns
 
     attr_reader :resource, :form_owner
 
-    def param_key
-      param_key = self.class.param_key
-      param_key ||= resource.present? && resource.respond_to?(:model_name) && resource.model_name.param_key
-      raise NoParamKey if param_key.blank?
-      param_key
+    def model_name_attributes
+      if self.class.param_key.present?
+        {
+          param_key: self.class.param_key,
+          route_key: self.class.param_key.pluralize,
+          singular_route_key: self.class.param_key
+        }
+      elsif resource.present? && resource.respond_to?(:model_name)
+        {
+          param_key: resource.model_name.param_key,
+          route_key: resource.model_name.route_key,
+          singular_route_key: resource.model_name.singular_route_key
+        }
+      else
+        raise NoParamKey
+      end
     end
-
+    
     def build_original_attributes
       return {} if resource.nil?
       base_attributes = resource.respond_to?(:attributes) && resource.attributes.symbolize_keys
