@@ -41,6 +41,8 @@ module Patterns
     end
 
     def base_relation
+      return nil if self.class.base_relation.nil?
+
       if self.class.base_relation.is_a?(ActiveRecord::Relation)
         self.class.base_relation
       elsif self.class.base_relation < ActiveRecord::Base
