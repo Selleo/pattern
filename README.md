@@ -75,7 +75,7 @@ RecentlyActivatedUsersQuery.call(date_range: Date.today.beginning_of_day..Date.t
 RecentlyActivatedUsersQuery.call(User.without_test_users, date_range: Date.today.beginning_of_day..Date.today.end_of_day)
 
 class User < ApplicationRecord
-  scope :recenty_activated, RecentlyActivatedUsersQuery
+  scope :recently_activated, RecentlyActivatedUsersQuery
 end
 ```
 
