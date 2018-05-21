@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/Selleo/pattern/tree/master.svg?style=svg)](https://circleci.com/gh/Selleo/pattern/tree/master)
+
 # Pattern
 
 A collection of lightweight, standardized, rails-oriented patterns used by [RubyOnRails Developers @ Selleo](https://selleo.com/ruby-on-rails)
