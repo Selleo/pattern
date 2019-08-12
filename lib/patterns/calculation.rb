@@ -39,7 +39,15 @@ module Patterns
     end
 
     def cache_key
-      "#{self.class.name}_#{[subject, options].hash}"
+      "#{self.class.name}_#{hash_of(subject, options)}"
+    end
+
+    def self.hash_of(*args)
+      Digest::SHA1.hexdigest(args.map(&:to_s).join(':'))
+    end
+
+    def hash_of(*args)
+      self.class.hash_of(*args)
     end
 
     def cache_expiry_period
