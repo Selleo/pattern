@@ -21,8 +21,12 @@ module Patterns
     end
 
     def cached_result
-      Rails.cache.fetch(cache_key, expires_in: cache_expiry_period, force: cache_expiry_period.blank?) do
+      if cache_expiry_period.blank?
         result
+      else
+        Rails.cache.fetch(cache_key, expires_in: cache_expiry_period) do
+          result
+        end
       end
     end
 
