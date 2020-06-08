@@ -21,6 +21,7 @@ require "active_support/all"
 require "active_support/testing/time_helpers"
 require "pry"
 require "rails-patterns"
+require "redis"
 
 RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
