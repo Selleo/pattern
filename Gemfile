@@ -16,4 +16,5 @@ end
 group "test" do
   gem "pry-rails"
   gem "rspec_junit_formatter"
+  gem "redis"
 end

@@ -159,5 +159,32 @@ RSpec.describe Patterns::Calculation do
       expect(CustomCalculation.result).to eq 1
       expect(CustomCalculation.result).to eq 2
     end
+
+    describe "when RedisCacheStore is used" do
+      it "does not store data in cache if 'cache_expiry_period is not set'" do
+        Object.send(:remove_const, :Rails)
+        client = Redis.new
+        class Rails
+          def self.cache
+            @cache ||= ActiveSupport::Cache::RedisCacheStore.new
+          end
+        end
+
+        CustomCalculation = Class.new(Patterns::Calculation) do
+          class_attribute :counter
+          self.counter = 0
+
+          private
+
+          def result
+            self.class.counter += 1
+          end
+        end
+
+        expect(CustomCalculation.result).to eq 1
+        expect(CustomCalculation.result).to eq 2
+        expect(client.keys).to be_empty
+      end
+    end
   end
 end
