@@ -8,6 +8,7 @@ RSpec.describe Patterns::Calculation do
   end
 
   after(:all) do
+    ActiveSupport::Cache::RedisCacheStore.new.clear
     Object.send(:remove_const, :Rails)
   end
 
@@ -184,6 +185,52 @@ RSpec.describe Patterns::Calculation do
         expect(CustomCalculation.result).to eq 2
         expect(client.keys).to be_empty
       end
+    end
+
+    it "uses cache keys consistent between processes" do
+      rails_mock = <<~RUBY
+        class Rails
+          def self.cache
+            @cache ||= ActiveSupport::Cache::RedisCacheStore.new
+          end
+        end
+      RUBY
+
+      klass = <<~RUBY
+        require 'active_support/all'
+        require 'active_support/testing/time_helpers'
+        require_relative 'rails_mock'
+        require_relative '../../lib/patterns/calculation'
+        CustomCalculation = Class.new(Patterns::Calculation) do
+          set_cache_expiry_every 1.hour
+          class_attribute :counter
+          self.counter = 0
+          private
+          def result
+            self.class.counter += 1
+          end
+        end
+      RUBY
+
+      script = <<~RUBY
+        require_relative 'rails_mock'
+        require_relative 'custom_calculation'
+        CustomCalculation.result
+      RUBY
+
+      `mkdir -p tmp/spec`
+      `echo "#{klass}" > tmp/spec/custom_calculation.rb`
+      `echo "#{script}" > tmp/spec/calculation_script.rb`
+      `echo "#{rails_mock}" > tmp/spec/rails_mock.rb`
+      `bundle exec ruby tmp/spec/custom_calculation.rb`
+
+      Process.spawn('bundle exec ruby tmp/spec/calculation_script.rb')
+      Process.spawn('bundle exec ruby tmp/spec/calculation_script.rb')
+      Process.spawn('bundle exec ruby tmp/spec/calculation_script.rb')
+      Process.waitall
+
+      expect(Redis.new.keys.length).to eq 1
+      `rm -rf tmp/spec`
     end
   end
 end
