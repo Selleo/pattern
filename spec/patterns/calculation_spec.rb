@@ -162,7 +162,6 @@ RSpec.describe Patterns::Calculation do
 
     describe "when RedisCacheStore is used" do
       it "does not store data in cache if 'cache_expiry_period is not set'" do
-        Object.send(:remove_const, :Rails)
         client = Redis.new
         class Rails
           def self.cache
