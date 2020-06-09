@@ -1,3 +1,5 @@
+require 'digest'
+
 module Patterns
   class Calculation
     class_attribute :cache_expiry_every
