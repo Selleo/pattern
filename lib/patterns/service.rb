@@ -2,8 +2,8 @@ module Patterns
   class Service
     attr_reader :result
 
-    def self.call(*args)
-      new(*args).tap do |service|
+    def self.call(*args, **kwargs, &block)
+      new(*args, **kwargs, &block).tap do |service|
         service.instance_variable_set(
           "@result",
           service.call
