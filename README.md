@@ -1,4 +1,4 @@
-![Ruby](https://github.com/Selleo/pattern/workflows/Ruby/badge.svg)
+![](https://github.com/Selleo/pattern/workflows/Ruby/badge.svg)
 
 # Pattern
 
