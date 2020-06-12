@@ -10,7 +10,7 @@ RSpec.describe Patterns::Service do
       expect(DoSomething.call).to be_kind_of(DoSomething)
     end
 
-    it "instantiates service object passing arguments to constructor" do
+    it "instantiates service object passing keyword arguments to constructor" do
       DoSomething = Class.new(Patterns::Service) do
         def initialize(argument_1:, argument_2:); end
         def call; end
@@ -22,6 +22,21 @@ RSpec.describe Patterns::Service do
 
       expect {
         DoSomething.call(argument_1: 10, argument_2: 20)
+      }.not_to raise_error
+    end
+
+    it "instantiates service object passing positional arguments to constructor" do
+      DoSomething = Class.new(Patterns::Service) do
+        def initialize(argument_1, argument_2); end
+        def call; end
+      end
+
+      expect {
+        DoSomething.call
+      }.to raise_error ArgumentError
+
+      expect {
+        DoSomething.call(10, 20)
       }.not_to raise_error
     end
 
