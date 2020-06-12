@@ -18,15 +18,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ '2.4', '2.7' ]
-    name: Ruby ${{ matrix.ruby }} Tests
+        ruby: [ '2.5', '2.6', '2.7' ]
+    name: RSpec ${{ matrix.ruby }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - name: Install dependencies
-        run: bundle install
-      - name: Run tests
-        run: bundle exec rspec
+      - run: gem install bundler
+      - run: bundle install
+      - run: bundle exec rspec
