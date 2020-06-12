@@ -23,6 +23,7 @@ jobs:
     name: RSpec ${{ matrix.ruby }}
     steps:
       - uses: actions/checkout@v2
+      - uses: supercharge/redis-github-action@1.1.0
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
