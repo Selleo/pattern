@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.name = "rails-patterns".freeze
   s.version = "0.7.0"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 2.4.4".freeze) if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Stevo".freeze]
   s.date = "2020-06-12"
@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/selleo/pattern".freeze
   s.licenses = ["MIT".freeze]
+  s.required_ruby_version = Gem::Requirement.new(">= 2.4.4".freeze)
   s.rubygems_version = "3.1.2".freeze
   s.summary = "A collection of lightweight, standardized, rails-oriented patterns.".freeze
 
