@@ -21,7 +21,7 @@ Juwelier::Tasks.new do |gem|
   gem.description = "A collection of lightweight, standardized, rails-oriented patterns."
   gem.email = "b.kosmowski@selleo.com"
   gem.authors = ["Stevo"]
-  gem.required_ruby_version = ">= 2.4.4"
+  gem.required_ruby_version = ">= 2.5.0"
 
   # dependencies defined in Gemfile
 end

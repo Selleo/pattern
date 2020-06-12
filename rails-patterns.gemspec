@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
     "README.md"
   ]
   s.files = [
-    ".circleci/config.yml",
     ".document",
+    ".github/workflows/ruby.yml",
     ".rspec",
     "Gemfile",
     "Gemfile.lock",
@@ -48,27 +48,37 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/selleo/pattern".freeze
   s.licenses = ["MIT".freeze]
-  s.required_ruby_version = Gem::Requirement.new(">= 2.4.4".freeze)
-  s.rubygems_version = "3.1.2".freeze
+  s.required_ruby_version = Gem::Requirement.new(">= 2.5.0".freeze)
+  s.rubygems_version = "2.7.6.2".freeze
   s.summary = "A collection of lightweight, standardized, rails-oriented patterns.".freeze
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
-  end
 
-  if s.respond_to? :add_runtime_dependency then
-    s.add_runtime_dependency(%q<activerecord>.freeze, [">= 4.2.6"])
-    s.add_runtime_dependency(%q<actionpack>.freeze, [">= 4.2.6"])
-    s.add_runtime_dependency(%q<virtus>.freeze, [">= 0"])
-    s.add_development_dependency(%q<rspec>.freeze, [">= 0"])
-    s.add_development_dependency(%q<bundler>.freeze, ["~> 1.0"])
-    s.add_development_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<activerecord>.freeze, [">= 4.2.6"])
+      s.add_runtime_dependency(%q<actionpack>.freeze, [">= 4.2.6"])
+      s.add_runtime_dependency(%q<virtus>.freeze, [">= 0"])
+      s.add_runtime_dependency(%q<ruby2_keywords>.freeze, [">= 0"])
+      s.add_development_dependency(%q<rspec>.freeze, [">= 0"])
+      s.add_development_dependency(%q<bundler>.freeze, ["~> 2.0"])
+      s.add_development_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
+    else
+      s.add_dependency(%q<activerecord>.freeze, [">= 4.2.6"])
+      s.add_dependency(%q<actionpack>.freeze, [">= 4.2.6"])
+      s.add_dependency(%q<virtus>.freeze, [">= 0"])
+      s.add_dependency(%q<ruby2_keywords>.freeze, [">= 0"])
+      s.add_dependency(%q<rspec>.freeze, [">= 0"])
+      s.add_dependency(%q<bundler>.freeze, ["~> 2.0"])
+      s.add_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
+    end
   else
     s.add_dependency(%q<activerecord>.freeze, [">= 4.2.6"])
     s.add_dependency(%q<actionpack>.freeze, [">= 4.2.6"])
     s.add_dependency(%q<virtus>.freeze, [">= 0"])
+    s.add_dependency(%q<ruby2_keywords>.freeze, [">= 0"])
     s.add_dependency(%q<rspec>.freeze, [">= 0"])
-    s.add_dependency(%q<bundler>.freeze, ["~> 1.0"])
+    s.add_dependency(%q<bundler>.freeze, ["~> 2.0"])
     s.add_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
   end
 end
