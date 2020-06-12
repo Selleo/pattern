@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/Selleo/pattern/tree/master.svg?style=svg)](https://circleci.com/gh/Selleo/pattern/tree/master)
+![](https://github.com/Selleo/pattern/workflows/Ruby/badge.svg)
 
 # Pattern
 
