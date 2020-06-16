@@ -9,6 +9,7 @@ A collection of lightweight, standardized, rails-oriented patterns used by [Ruby
 - [Collection - when in need to add a method that relates to the collection as whole](#collection)
 - [Form - when you need a place for callbacks, want to replace strong parameters or handle virtual/composite resources](#form)
 - [Calculation - when you need a place for calculating a simple value (numeric, array, hash) and/or cache it](#calculation)
+- [Rule and Ruleset - when you need a place for conditional logic](#rule-and-ruleset)
 
 ## Installation
 
@@ -345,6 +346,59 @@ AverageHotelDailyRevenue.result_for(hotel, year: 2015)
 
 TotalCurrentRevenue.calculate
 AverageDailyRevenue.result
+```
+
+## Rule and Ruleset
+
+### When to use it
+
+Rule objects provide a place for conditional logic
+
+### Assumptions and rules
+
+* Rule has `#satisfied?`, `#applicable?` and `#forceable?` methods
+* Custom rule has to implement at least `#satisfied?` method
+* Rule requires a subject as first argument
+* Multiple rules can be joined into `Ruleset`
+
+### Examples
+
+#### Declaration
+
+```ruby
+class RoomIsAssignedRule < Rule
+  def satisfied?
+    subject.unit.present?
+  end
+
+  def forceable?
+    false
+  end
+end
+
+class RoomIsCleanRule < Rule
+  def satisfied?
+    !subject.unit.dirty?
+  end
+
+  def not_applicable?
+    !RoomIsAssignedRule.new(subject).satisfied?
+  end
+end
+
+RoomIsReadyRuleset = Class.new(Ruleset)
+RoomIsReadyRuleset.
+  add_rule(:room_is_assigned_rule).
+  add_rule(:room_is_clean_rule)
+```
+
+#### Usage
+
+```ruby
+RoomIsAssignedRule.new(room).satisfied?
+
+RoomIsReadyRuleset.new(room).satisfied?
+RoomIsReadyRuleset.new(room).satisfied?(force: true)
 ```
 
 ## Further reading
