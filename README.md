@@ -352,53 +352,79 @@ AverageDailyRevenue.result
 
 ### When to use it
 
-Rule objects provide a place for conditional logic
+Rule objects provide a place for dislocating/extracting conditional logic.
+
+Use it when:
+- given complex condition is duplicated in multiple places in your codebase
+- part of condition logic can be reused in some other place
+- there is a need to instantiate condition itself for some reason (i.e. to represent it in the interface)
+- responsibility of your class is blurred by complex conditional logic, and as a result...
+- ...tests for your class require multiple condition branches / nested contexts
 
 ### Assumptions and rules
 
-* Rule has `#satisfied?`, `#applicable?` and `#forceable?` methods
-* Custom rule has to implement at least `#satisfied?` method
-* Rule requires a subject as first argument
-* Multiple rules can be joined into `Ruleset`
+* Rule has `#satisfied?`, `#applicable?`, `#not_applicable?` and `#forceable?` methods available.
+* Rule has to implement at least `#satisfied?` method. `#not_applicable?` and `#forceable?` are meant to be overridable.
+* `#forceable?` makes sense in scenario where condition is capable of being force-satisfied regardless if its actually satisfied or not. Is `true` by default.
+* Override `#not_applicable?` when method is applicable only under some specific conditions. Is `false` by default.
+* Rule requires a subject as first argument.
+* Multiple rules and rulesets can be combined into new ruleset as both share same interface and can be used interchangeably (composite pattern).
+
+#### Forcing rules
+
+On some occasions there is a situation in which some condition should be overridable.
+Let's say we may want send shipping notification even though given order was not paid for and under regular circumstances such notification should not be sent.
+In this case, while regular logic with some automated process would not trigger delivery, an action triggered by user from UI could do it, by passing `force: true` option to `#satisified?` methods.
+
+It might be good idea to test for `#forceable?` on the UI level to control visibility of such link/button.
+
+Overriding `#forceable` can be useful to prevent some edge cases, i.e. `ContactInformationProvidedRule` might check if customer for given order has provided any contact means by which a notification could be delivered.
+If not, ruleset containing such rule (and the rule itself) would not be "forceable" and UI could reflect that by querying `#forceable?`.
+
+#### Regular and strong rulesets
+
+While regular `Ruleset` can be satisfied or forced if any of its rules in not applicable, the
+`StrongRuleset` is not satisfied and not "forceable" if any of its rules is not applicable.
+
+#### `#not_applicable?` vs `#applicable?`
+
+It might be surprising that is is the negated version of the `#applicable?` predicate methods that is overridable.
+However, from the actual usage perspective, it usually easier to conceptually define when condition makes no sense than other way around.
 
 ### Examples
 
 #### Declaration
 
 ```ruby
-class RoomIsAssignedRule < Rule
+class OrderIsSentRule < Rule
   def satisfied?
-    subject.unit.present?
+    subject.sent?
+  end
+end
+
+class OrderIsPaidRule < Rule
+  def satisfied?
+    subject.paid?
   end
 
   def forceable?
-    false
+    true
   end
 end
 
-class RoomIsCleanRule < Rule
-  def satisfied?
-    !subject.unit.dirty?
-  end
-
-  def not_applicable?
-    !RoomIsAssignedRule.new(subject).satisfied?
-  end
-end
-
-RoomIsReadyRuleset = Class.new(Ruleset)
-RoomIsReadyRuleset.
-  add_rule(:room_is_assigned_rule).
-  add_rule(:room_is_clean_rule)
+OrderCompletedNotificationRuleset = Class.new(Ruleset)
+OrderCompletedNotificationRuleset.
+  add_rule(:order_is_sent_rule).
+  add_rule(:order_is_paid_rule)
 ```
 
 #### Usage
 
 ```ruby
-RoomIsAssignedRule.new(room).satisfied?
+OrderIsPaidRule.new(order).satisfied?
+OrderCompletedNotificationRuleset.new(order).satisfied?
 
-RoomIsReadyRuleset.new(room).satisfied?
-RoomIsReadyRuleset.new(room).satisfied?(force: true)
+ResendOrderNotification.call(order) if OrderCompletedNotificationRuleset.new(order).satisfied?(force: true)
 ```
 
 ## Further reading
