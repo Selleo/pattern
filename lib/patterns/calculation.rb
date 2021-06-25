@@ -9,8 +9,8 @@ module Patterns
       @subject = args.first
     end
 
-    def self.result(*args)
-      new(*args).cached_result
+    def self.result(*args, &block)
+      new(*args).cached_result(&block)
     end
 
     class << self
@@ -22,12 +22,12 @@ module Patterns
       self.cache_expiry_every = period
     end
 
-    def cached_result
+    def cached_result(&block)
       if cache_expiry_period.blank?
-        result
+        result(&block)
       else
         Rails.cache.fetch(cache_key, expires_in: cache_expiry_period) do
-          result
+          result(&block)
         end
       end
     end
