@@ -11,7 +11,7 @@ gem "ruby2_keywords"
 group :development do
   gem "rspec"
   gem "bundler", "~> 2.0"
-  gem "juwelier", "~> 2.1.0"
+  gem "juwelier"
 end
 
 group "test" do
