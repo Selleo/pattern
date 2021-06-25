@@ -60,6 +60,18 @@ RSpec.describe Patterns::Calculation do
 
       expect(CustomCalculation.result(nil, arg_1: 20, arg_2: 30)).to eq([20, 30])
     end
+
+    it 'executes calculation with given block' do
+      CustomCalculation = Class.new(Patterns::Calculation) do
+        private
+
+        def result
+          yield(subject)
+        end
+      end
+      
+      expect(CustomCalculation.result(5) { |a| a * 3 }).to eq(15)
+    end
   end
 
   describe "caching" do
