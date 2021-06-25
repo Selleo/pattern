@@ -68,7 +68,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<ruby2_keywords>.freeze, [">= 0"])
       s.add_development_dependency(%q<rspec>.freeze, [">= 0"])
       s.add_development_dependency(%q<bundler>.freeze, ["~> 2.0"])
-      s.add_development_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
+      s.add_development_dependency(%q<juwelier>.freeze, [">= 0"])
     else
       s.add_dependency(%q<activerecord>.freeze, [">= 4.2.6"])
       s.add_dependency(%q<actionpack>.freeze, [">= 4.2.6"])
@@ -76,7 +76,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<ruby2_keywords>.freeze, [">= 0"])
       s.add_dependency(%q<rspec>.freeze, [">= 0"])
       s.add_dependency(%q<bundler>.freeze, ["~> 2.0"])
-      s.add_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
+      s.add_dependency(%q<juwelier>.freeze, [">= 0"])
     end
   else
     s.add_dependency(%q<activerecord>.freeze, [">= 4.2.6"])
@@ -85,7 +85,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<ruby2_keywords>.freeze, [">= 0"])
     s.add_dependency(%q<rspec>.freeze, [">= 0"])
     s.add_dependency(%q<bundler>.freeze, ["~> 2.0"])
-    s.add_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
+    s.add_dependency(%q<juwelier>.freeze, [">= 0"])
   end
 end
 
