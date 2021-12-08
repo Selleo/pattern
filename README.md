@@ -24,11 +24,11 @@ gem "rails-patterns"
 Then `bundle install`
 
 ## Query
- 
+
 ### When to use it
 
-One should consider using query objects pattern when in need to perform complex querying on active record relation. 
-Usually one should avoid using scopes for such purpose. 
+One should consider using query objects pattern when in need to perform complex querying on active record relation.
+Usually one should avoid using scopes for such purpose.
 As a rule of thumb, if scope interacts with more than one column and/or joins in other tables, it should be moved to query object.
 Also whenever a chain of scopes is to be used, one should consider using query object too.
 Some more information on using query objects can be found in [this article](https://medium.com/@blazejkosmowski/essential-rubyonrails-patterns-part-2-query-objects-4b253f4f4539).
@@ -98,9 +98,9 @@ Service objects are also useful for handling processes involving multiple steps.
 * It is recommended for `#call` method to be the only public method of service object (besides state readers)
 * It is recommended to name service object classes after commands (e.g. `ActivateUser` instead of `UserActivation`)
 
-### Other 
+### Other
 
-A bit higher level of abstraction is provided by [business_process gem](https://github.com/Selleo/business_process). 
+A bit higher level of abstraction is provided by [business_process gem](https://github.com/Selleo/business_process).
 
 ### Examples
 
@@ -396,13 +396,13 @@ However, from the actual usage perspective, it usually easier to conceptually de
 #### Declaration
 
 ```ruby
-class OrderIsSentRule < Rule
+class OrderIsSentRule < Patterns::Rule
   def satisfied?
     subject.sent?
   end
 end
 
-class OrderIsPaidRule < Rule
+class OrderIsPaidRule < Patterns::Rule
   def satisfied?
     subject.paid?
   end
@@ -412,7 +412,7 @@ class OrderIsPaidRule < Rule
   end
 end
 
-OrderCompletedNotificationRuleset = Class.new(Ruleset)
+OrderCompletedNotificationRuleset = Class.new(Patterns::Ruleset)
 OrderCompletedNotificationRuleset.
   add_rule(:order_is_sent_rule).
   add_rule(:order_is_paid_rule)

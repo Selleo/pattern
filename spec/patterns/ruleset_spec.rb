@@ -1,8 +1,8 @@
-RSpec.describe Ruleset do
+RSpec.describe Patterns::Ruleset do
   context 'when empty ruleset is initialized' do
     it 'raises an error' do
-      empty_ruleset_klass = Class.new(Ruleset)
-      custom_ruleset_klass = Class.new(Ruleset)
+      empty_ruleset_klass = Class.new(Patterns::Ruleset)
+      custom_ruleset_klass = Class.new(Patterns::Ruleset)
       subject = double
 
       with_mocked_rules do |rules|
@@ -12,7 +12,7 @@ RSpec.describe Ruleset do
         expect { custom_ruleset_klass.new(subject) }.not_to raise_error
       end
 
-      expect { empty_ruleset_klass.new(subject) }.to raise_error Ruleset::EmptyRuleset
+      expect { empty_ruleset_klass.new(subject) }.to raise_error Patterns::Ruleset::EmptyRuleset
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe Ruleset do
           rules << mock_rule(:rule_1, is_forceable: true)
           rules << mock_rule(:rule_2, is_forceable: true)
 
-          custom_ruleset_klass = Class.new(Ruleset)
+          custom_ruleset_klass = Class.new(Patterns::Ruleset)
           custom_ruleset_klass.add_rule(:rule_1)
           custom_ruleset_klass.add_rule(:rule_2)
 
@@ -40,7 +40,7 @@ RSpec.describe Ruleset do
           rules << mock_rule(:rule_1, is_forceable: false, is_satisfied: false, is_applicable: true)
           rules << mock_rule(:rule_2, is_forceable: true)
 
-          custom_ruleset_klass = Class.new(Ruleset)
+          custom_ruleset_klass = Class.new(Patterns::Ruleset)
           custom_ruleset_klass.add_rule(:rule_1)
           custom_ruleset_klass.add_rule(:rule_2)
 
@@ -60,7 +60,7 @@ RSpec.describe Ruleset do
             )
             rules << mock_rule(:rule_2, is_forceable: true)
 
-            custom_ruleset_klass = Class.new(Ruleset)
+            custom_ruleset_klass = Class.new(Patterns::Ruleset)
             custom_ruleset_klass.add_rule(:rule_1)
             custom_ruleset_klass.add_rule(:rule_2)
 
@@ -81,7 +81,7 @@ RSpec.describe Ruleset do
             )
             rules << mock_rule(:rule_2, is_forceable: true)
 
-            custom_ruleset_klass = Class.new(Ruleset)
+            custom_ruleset_klass = Class.new(Patterns::Ruleset)
             custom_ruleset_klass.add_rule(:rule_1)
             custom_ruleset_klass.add_rule(:rule_2)
 
@@ -100,7 +100,7 @@ RSpec.describe Ruleset do
           rules << mock_rule(:rule_1, is_applicable: false)
           rules << mock_rule(:rule_2, is_applicable: false)
 
-          custom_ruleset_klass = Class.new(Ruleset)
+          custom_ruleset_klass = Class.new(Patterns::Ruleset)
           custom_ruleset_klass.add_rule(:rule_1)
           custom_ruleset_klass.add_rule(:rule_2)
 
@@ -116,7 +116,7 @@ RSpec.describe Ruleset do
           rules << mock_rule(:rule_1, is_applicable: false)
           rules << mock_rule(:rule_2, is_applicable: true)
 
-          custom_ruleset_klass = Class.new(Ruleset)
+          custom_ruleset_klass = Class.new(Patterns::Ruleset)
           custom_ruleset_klass.add_rule(:rule_1)
           custom_ruleset_klass.add_rule(:rule_2)
 
@@ -134,7 +134,7 @@ RSpec.describe Ruleset do
           rules << mock_rule(:rule_1)
           rules << mock_rule(:rule_2)
 
-          custom_ruleset_klass = Class.new(Ruleset)
+          custom_ruleset_klass = Class.new(Patterns::Ruleset)
           custom_ruleset_klass.add_rule(:rule_1)
           custom_ruleset_klass.add_rule(:rule_2)
 
@@ -150,7 +150,7 @@ RSpec.describe Ruleset do
           rules << mock_rule(:rule_1)
           rules << mock_rule(:rule_2, is_satisfied: false)
 
-          custom_ruleset_klass = Class.new(Ruleset)
+          custom_ruleset_klass = Class.new(Patterns::Ruleset)
           custom_ruleset_klass.add_rule(:rule_1)
           custom_ruleset_klass.add_rule(:rule_2)
 
@@ -165,7 +165,7 @@ RSpec.describe Ruleset do
             rules << mock_rule(:rule_1)
             rules << mock_rule(:rule_2, is_satisfied: false, is_applicable: false)
 
-            custom_ruleset_klass = Class.new(Ruleset)
+            custom_ruleset_klass = Class.new(Patterns::Ruleset)
             custom_ruleset_klass.add_rule(:rule_1)
             custom_ruleset_klass.add_rule(:rule_2)
 
@@ -182,7 +182,7 @@ RSpec.describe Ruleset do
               rules << mock_rule(:rule_1)
               rules << mock_rule(:rule_2, is_satisfied: false, is_forceable: true)
 
-              custom_ruleset_klass = Class.new(Ruleset)
+              custom_ruleset_klass = Class.new(Patterns::Ruleset)
               custom_ruleset_klass.add_rule(:rule_1)
               custom_ruleset_klass.add_rule(:rule_2)
 
@@ -198,7 +198,7 @@ RSpec.describe Ruleset do
               rules << mock_rule(:rule_1)
               rules << mock_rule(:rule_2, is_satisfied: false, is_forceable: false)
 
-              custom_ruleset_klass = Class.new(Ruleset)
+              custom_ruleset_klass = Class.new(Patterns::Ruleset)
               custom_ruleset_klass.add_rule(:rule_1)
               custom_ruleset_klass.add_rule(:rule_2)
 
@@ -216,10 +216,10 @@ RSpec.describe Ruleset do
         rules << (_, rule_1 = mock_rule(:rule_1))
         rules << (_, rule_2 = mock_rule(:rule_2))
         rules << (_, rule_3 = mock_rule(:rule_3))
-        custom_ruleset_klass_1 = Class.new(Ruleset)
+        custom_ruleset_klass_1 = Class.new(Patterns::Ruleset)
         custom_ruleset_klass_1.add_rule(:rule_1)
         custom_ruleset_klass_1.add_rule(:rule_2)
-        Ruleset2 = Class.new(Ruleset)
+        Ruleset2 = Class.new(Patterns::Ruleset)
         Ruleset2.add_rule(:rule_3)
         custom_ruleset_klass_1.add_rule(:ruleset_2)
 
@@ -235,7 +235,7 @@ RSpec.describe Ruleset do
   private
 
   def mock_rule(rule_name, is_applicable: true, is_satisfied: true, is_forceable: true)
-    klass = Object.const_set(rule_name.to_s.classify, Class.new(Rule))
+    klass = Object.const_set(rule_name.to_s.classify, Class.new(Patterns::Rule))
     rule = double(
       not_applicable?: !is_applicable,
       satisfied?: is_satisfied,

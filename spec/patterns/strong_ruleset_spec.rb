@@ -1,7 +1,7 @@
-RSpec.describe StrongRuleset do
+RSpec.describe Patterns::StrongRuleset do
   it 'inherites from Ruleset' do
-    custom_strong_ruleset_klass = Class.new(StrongRuleset)
-    expect(custom_strong_ruleset_klass.ancestors).to include Ruleset
+    custom_strong_ruleset_klass = Class.new(Patterns::StrongRuleset)
+    expect(custom_strong_ruleset_klass.ancestors).to include Patterns::Ruleset
   end
 
   context 'when any of rules is not applicable' do
@@ -11,7 +11,7 @@ RSpec.describe StrongRuleset do
         rules << mock_rule(:rule_1, is_applicable: false)
         rules << mock_rule(:rule_2)
 
-        custom_ruleset_klass = Class.new(StrongRuleset)
+        custom_ruleset_klass = Class.new(Patterns::StrongRuleset)
         custom_ruleset_klass.add_rule(:rule_1)
         custom_ruleset_klass.add_rule(:rule_2)
 
@@ -26,7 +26,7 @@ RSpec.describe StrongRuleset do
           rules << mock_rule(:rule_1, is_applicable: false, is_satisfied: false)
           rules << mock_rule(:rule_2)
 
-          custom_ruleset_klass = Class.new(StrongRuleset)
+          custom_ruleset_klass = Class.new(Patterns::StrongRuleset)
           custom_ruleset_klass.add_rule(:rule_1)
           custom_ruleset_klass.add_rule(:rule_2)
 
@@ -41,7 +41,7 @@ RSpec.describe StrongRuleset do
         rules << mock_rule(:rule_1, is_applicable: false)
         rules << mock_rule(:rule_2)
 
-        custom_ruleset_klass = Class.new(StrongRuleset)
+        custom_ruleset_klass = Class.new(Patterns::StrongRuleset)
         custom_ruleset_klass.add_rule(:rule_1)
         custom_ruleset_klass.add_rule(:rule_2)
 
@@ -53,7 +53,7 @@ RSpec.describe StrongRuleset do
   private
 
   def mock_rule(rule_name, is_applicable: true, is_satisfied: true, is_forceable: true)
-    klass = Object.const_set(rule_name.to_s.classify, Class.new(Rule))
+    klass = Object.const_set(rule_name.to_s.classify, Class.new(Patterns::Rule))
     rule = double(
       not_applicable?: !is_applicable,
       applicable?: is_applicable,
