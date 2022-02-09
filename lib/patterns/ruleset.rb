@@ -1,7 +1,5 @@
 module Patterns
   class Ruleset
-    class EmptyRuleset < StandardError; end
-
     class << self
       attr_accessor :rule_names
     end
@@ -19,8 +17,6 @@ module Patterns
     end
 
     def initialize(subject = nil)
-      raise EmptyRuleset if self.class.rules.empty?
-
       @rules = self.class.rules.map { |rule| rule.new(subject) }
     end
 

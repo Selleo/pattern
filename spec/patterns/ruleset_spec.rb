@@ -1,21 +1,4 @@
 RSpec.describe Patterns::Ruleset do
-  context 'when empty ruleset is initialized' do
-    it 'raises an error' do
-      empty_ruleset_klass = Class.new(Patterns::Ruleset)
-      custom_ruleset_klass = Class.new(Patterns::Ruleset)
-      subject = double
-
-      with_mocked_rules do |rules|
-        rules << mock_rule(:rule_1)
-        custom_ruleset_klass.add_rule(:rule_1)
-
-        expect { custom_ruleset_klass.new(subject) }.not_to raise_error
-      end
-
-      expect { empty_ruleset_klass.new(subject) }.to raise_error Patterns::Ruleset::EmptyRuleset
-    end
-  end
-
   describe '#forceable?' do
     context 'all rules are forceable' do
       it 'returns true' do
@@ -205,6 +188,18 @@ RSpec.describe Patterns::Ruleset do
               expect(custom_ruleset_klass.new(subject).satisfied?(force: true)).to eq false
             end
           end
+        end
+      end
+    end
+
+    context 'ruleset has no rules' do
+      it 'returns true' do
+        with_mocked_rules do |_rules|
+          subject = double
+
+          custom_ruleset_klass = Class.new(Patterns::Ruleset)
+
+          expect(custom_ruleset_klass.new(subject).satisfied?).to eq true
         end
       end
     end
