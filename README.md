@@ -369,6 +369,7 @@ Use it when:
 * Override `#not_applicable?` when method is applicable only under some specific conditions. Is `false` by default.
 * Rule requires a subject as first argument.
 * Multiple rules and rulesets can be combined into new ruleset as both share same interface and can be used interchangeably (composite pattern).
+* By default empty ruleset is satisfied.
 
 #### Forcing rules
 
