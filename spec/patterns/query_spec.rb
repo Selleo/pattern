@@ -1,30 +1,54 @@
 RSpec.describe Patterns::Query do
   after { Object.send(:remove_const, :CustomQuery) if defined?(CustomQuery) }
 
-  describe ".new" do
-    it "accepts a relation only as argument" do
+  describe '.new' do
+    it 'accepts a relation only as argument' do
       CustomQuery = Class.new(Patterns::Query)
 
       expect {
         CustomQuery.new([1, 2, 3])
       }.to raise_error(
-               Patterns::Query::RelationRequired,
-               "Queries accept only ActiveRecord::Relation as input"
-           )
+        Patterns::Query::RelationRequired,
+        'Queries accept only ActiveRecord::Relation as input'
+      )
     end
 
-    it "requires an argument" do
+    it 'accepts a relation only as keyword positional arguments' do
+      CustomQuery = Class.new(Patterns::Query) do
+        def initialize(a); end
+
+        def query
+          ActiveRecord::Relation.allocate
+        end
+      end
+
+      expect { CustomQuery.call([1, 2]) }.not_to raise_error
+    end
+
+    it 'accepts a relation only as keyword arguments' do
+      CustomQuery = Class.new(Patterns::Query) do
+        def initialize(a:); end
+
+        def query
+          ActiveRecord::Relation.allocate
+        end
+      end
+
+      expect { CustomQuery.call(a: [1, 2]) }.not_to raise_error
+    end
+
+    it 'requires an argument' do
       CustomQuery = Class.new(Patterns::Query)
 
       expect {
         CustomQuery.new
       }.to raise_error(
-                     Patterns::Query::RelationRequired,
-               "Queries require a base relation defined. Use .queries method to define relation."
-           )
+        Patterns::Query::RelationRequired,
+        'Queries require a base relation defined. Use .queries method to define relation.'
+      )
     end
 
-    it "initializes a query object" do
+    it 'initializes a query object' do
       CustomQuery = Class.new(Patterns::Query)
       relation = ActiveRecord::Relation.allocate
 
@@ -34,8 +58,8 @@ RSpec.describe Patterns::Query do
     end
   end
 
-  describe ".call" do
-    it "calls #call and passes argument to constructor" do
+  describe '.call' do
+    it 'calls #call and passes argument to constructor' do
       CustomQuery = Class.new(Patterns::Query)
       relation = ActiveRecord::Relation.allocate
       result_relation = ActiveRecord::Relation.allocate
@@ -50,20 +74,20 @@ RSpec.describe Patterns::Query do
     end
   end
 
-  describe "#call" do
-    it "requires impementing #query method" do
+  describe '#call' do
+    it 'requires impementing #query method' do
       relation =  ActiveRecord::Relation.allocate
       CustomQuery = Class.new(Patterns::Query)
 
       expect {
         CustomQuery.new(relation).call
       }.to raise_error(
-               NotImplementedError,
-               "You need to implement #query method which returns ActiveRecord::Relation object"
-           )
+        NotImplementedError,
+        'You need to implement #query method which returns ActiveRecord::Relation object'
+      )
     end
 
-    it "returns result of calling #query" do
+    it 'returns result of calling #query' do
       relation = ActiveRecord::Relation.allocate
       result_relation = ActiveRecord::Relation.allocate
       CustomQuery = Class.new(Patterns::Query) do
@@ -81,7 +105,7 @@ RSpec.describe Patterns::Query do
       expect(result).to eql result_relation
     end
 
-    it "ensures that #query returns a relation" do
+    it 'ensures that #query returns a relation' do
       relation = ActiveRecord::Relation.allocate
       CustomQuery = Class.new(Patterns::Query) do
         def query
@@ -92,9 +116,9 @@ RSpec.describe Patterns::Query do
       expect {
         CustomQuery.call(relation)
       }.to raise_error(
-                     Patterns::Query::RelationRequired,
-               "#query method should return object of ActiveRecord::Relation class"
-           )
+        Patterns::Query::RelationRequired,
+        '#query method should return object of ActiveRecord::Relation class'
+      )
     end
   end
 end

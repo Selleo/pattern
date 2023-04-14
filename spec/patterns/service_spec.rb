@@ -1,8 +1,8 @@
 RSpec.describe Patterns::Service do
   after { Object.send(:remove_const, :DoSomething) if defined?(DoSomething) }
 
-  describe ".call" do
-    it "returns instance of service object" do
+  describe '.call' do
+    it 'returns instance of service object' do
       DoSomething = Class.new(Patterns::Service) do
         def call; end
       end
@@ -10,7 +10,7 @@ RSpec.describe Patterns::Service do
       expect(DoSomething.call).to be_kind_of(DoSomething)
     end
 
-    it "instantiates service object passing keyword arguments to constructor" do
+    it 'instantiates service object passing keyword arguments to constructor' do
       DoSomething = Class.new(Patterns::Service) do
         def initialize(argument_1:, argument_2:); end
         def call; end
@@ -25,7 +25,7 @@ RSpec.describe Patterns::Service do
       }.not_to raise_error
     end
 
-    it "instantiates service object passing positional arguments to constructor" do
+    it 'instantiates service object passing positional arguments to constructor' do
       DoSomething = Class.new(Patterns::Service) do
         def initialize(argument_1, argument_2); end
         def call; end
@@ -40,7 +40,7 @@ RSpec.describe Patterns::Service do
       }.not_to raise_error
     end
 
-    it "calls #call method on service object instance" do
+    it 'calls #call method on service object instance' do
       Spy = Class.new do
         def self.some_method; end
       end
@@ -56,7 +56,7 @@ RSpec.describe Patterns::Service do
       expect(Spy).to have_received(:some_method)
     end
 
-    it "requires #call method to be implemented" do
+    it 'requires #call method to be implemented' do
       DoSomething = Class.new(Patterns::Service)
 
       expect {
@@ -65,8 +65,8 @@ RSpec.describe Patterns::Service do
     end
   end
 
-  describe "#result" do
-    it "returns a result of expression within #call method" do
+  describe '#result' do
+    it 'returns a result of expression within #call method' do
       DoSomething = Class.new(Patterns::Service) do
         def call
           50
