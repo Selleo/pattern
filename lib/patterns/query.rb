@@ -1,4 +1,5 @@
-require "active_record"
+require 'active_record'
+require 'ruby2_keywords'
 
 module Patterns
   class Query
@@ -11,18 +12,20 @@ module Patterns
       if relation.nil?
         raise(
           RelationRequired,
-          "Queries require a base relation defined. Use .queries method to define relation."
+          'Queries require a base relation defined. Use .queries method to define relation.'
         )
       elsif !relation.is_a?(ActiveRecord::Relation)
         raise(
           RelationRequired,
-          "Queries accept only ActiveRecord::Relation as input"
+          'Queries accept only ActiveRecord::Relation as input'
         )
       end
     end
 
-    def self.call(*args)
-      new(*args).call
+    class << self
+      ruby2_keywords def call(*args)
+        new(*args).call
+      end
     end
 
     def call
@@ -30,7 +33,7 @@ module Patterns
         unless relation.is_a?(ActiveRecord::Relation)
           raise(
             RelationRequired,
-            "#query method should return object of ActiveRecord::Relation class"
+            '#query method should return object of ActiveRecord::Relation class'
           )
         end
       end
@@ -61,7 +64,7 @@ module Patterns
     def query
       raise(
         NotImplementedError,
-        "You need to implement #query method which returns ActiveRecord::Relation object"
+        'You need to implement #query method which returns ActiveRecord::Relation object'
       )
     end
   end

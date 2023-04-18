@@ -54,7 +54,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/selleo/pattern".freeze
   s.licenses = ["MIT".freeze]
-  s.required_ruby_version = Gem::Requirement.new(">= 2.5.0".freeze)
+  s.required_ruby_version = Gem::Requirement.new(">= 2.7.0".freeze)
   s.rubygems_version = "3.0.8".freeze
   s.summary = "A collection of lightweight, standardized, rails-oriented patterns.".freeze
 
