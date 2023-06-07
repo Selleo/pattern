@@ -430,7 +430,7 @@ ResendOrderNotification.call(order) if OrderCompletedNotificationRuleset.new(ord
 
 ## Further reading
 
-* [7 ways to decompose fat active record models](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/)
+* [7 ways to decompose fat active record models](https://codeclimate.com/blog/7-ways-to-decompose-fat-activerecord-models)
 
 ## About Selleo
 
