@@ -69,14 +69,14 @@ RSpec.describe Patterns::Calculation do
           yield(subject)
         end
       end
-      
+
       expect(CustomCalculation.result(5) { |a| a * 3 }).to eq(15)
     end
   end
 
   describe "caching" do
     it "caches result for 'set_cache_expiry_every' period" do
-      travel_to DateTime.new(2017, 1, 1, 12, 0) do
+      travel_to Time.new(2017, 1, 1, 12, 0, 0, 0) do
         CustomCalculation = Class.new(Patterns::Calculation) do
           set_cache_expiry_every 1.hour
 
@@ -94,7 +94,7 @@ RSpec.describe Patterns::Calculation do
         expect(CustomCalculation.result).to eq 1
       end
 
-      travel_to DateTime.new(2017, 1, 1, 13, 1) do
+      travel_to Time.new(2017, 1, 1, 13, 1, 0, 0) do
         expect(CustomCalculation.result).to eq 2
         expect(CustomCalculation.result).to eq 2
       end
@@ -174,6 +174,8 @@ RSpec.describe Patterns::Calculation do
     end
 
     describe "when RedisCacheStore is used" do
+      after { Redis.new.flushdb }
+
       it "does not store data in cache if 'cache_expiry_period' is not set" do
         client = Redis.new
         class Rails

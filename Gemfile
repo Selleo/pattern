@@ -14,7 +14,7 @@ group :development do
   gem "juwelier"
 end
 
-group "test" do
+group :test do
   gem "pry-rails"
   gem "rspec_junit_formatter"
   gem "redis"
